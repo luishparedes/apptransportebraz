@@ -1,3 +1,4 @@
 document.getElementById('enterButton').addEventListener('click', function() {
-    window.location.href = 'https://luishparedes.github.io/transportebranzweb/';
+    // Abrir el enlace en el navegador externo
+    window.open('https://luishparedes.github.io/transportebranzweb/', '_system');
 });
