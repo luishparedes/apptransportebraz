@@ -1,17 +1,41 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransporteBraz</title>
-    <link rel="stylesheet" href="styles.css">
+  <title>Redirección</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0; /* Color de fondo */
+    }
+
+    .mensaje {
+      text-align: center;
+      font-size: 24px;
+      color: #333; /* Color del texto */
+    }
+  </style>
 </head>
 <body>
-    <div class="welcome-container">
-        <h1>Bienvenido al Sistema Privado Braz</h1>
-        <button id="enterButton">Entrar al Sistema</button>
-    </div>
+  <div class="mensaje">
+    Redirigiendo...
+  </div>
 
-    <script src="script.js"></script>
+  <script>
+    // URL de tu sistema web
+    const urlSistema = "https://luishparedes.github.io/transportebranzweb/";
+
+    // Detectar si la aplicación se está ejecutando dentro de Webintoapp
+    if (navigator.userAgent.indexOf("Webintoapp") > -1) {
+      // Redirigir inmediatamente a la URL del sistema
+      window.location.href = urlSistema;
+    } else {
+      // Si no está en Webintoapp, mostrar un mensaje o realizar otra acción
+      document.querySelector(".mensaje").textContent = "Esta aplicación solo funciona dentro de Webintoapp.";
+    }
+  </script>
 </body>
 </html>
