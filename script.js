@@ -137,37 +137,27 @@ function mostrarReporte() {
             <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado de Pago:</strong> ${viaje.estadoPago}</p>
             <button onclick="editarViaje(${index})">Editar</button>
             <button onclick="eliminarViaje(${index})">Eliminar</button>
-            <button onclick="tomarCaptura(${index})">Tomar Captura</button>
+            <button onclick="generarPDF(${index})">Generar PDF</button>
             <hr>
         `;
         reporteDiv.appendChild(viajeReporte);
     });
 }
 
-function tomarCaptura(index) {
+function generarPDF(index) {
     const viaje = viajes[index];
 
-    // Crear un canvas temporal para dibujar la imagen
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    // Crear un nuevo documento PDF
+    const doc = new jspdf.jsPDF();
 
-    // Definir el tamaño del canvas
-    canvas.width = 400; // Ancho de la imagen
-    canvas.height = 600; // Alto de la imagen
-
-    // Dibujar el fondo (opcional)
-    ctx.fillStyle = '#ffffff'; // Fondo blanco
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Dibujar los datos del viaje
-    ctx.fillStyle = '#000000'; // Color del texto
-    ctx.font = '16px Arial';
-    let y = 30; // Posición vertical inicial
-
-    // Función para agregar texto
-    const agregarTexto = (texto, x = 20) => {
-        ctx.fillText(texto, x, y);
-        y += 20; // Aumentar la posición vertical
+    // Agregar contenido al PDF
+    doc.setFontSize(18);
+    doc.text("Ficha de Viaje", 10, 10);
+    doc.setFontSize(12);
+    let y = 20;
+    const agregarTexto = (texto) => {
+        doc.text(texto, 10, y);
+        y += 10;
     };
 
     agregarTexto(`Fecha: ${viaje.fecha}`);
@@ -185,16 +175,8 @@ function tomarCaptura(index) {
     agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
     agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
 
-    // Convertir el canvas a una imagen en base64
-    const imagen = canvas.toDataURL('image/png');
-
-    // Crear un enlace para descargar la imagen
-    const enlace = document.createElement('a');
-    enlace.href = imagen;
-    enlace.download = `viaje_${index + 1}.png`;
-    enlace.click();
-
-    alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
+    // Guardar el PDF
+    doc.save(`viaje_${index + 1}.pdf`);
 }
 
 function guardarDatos() {
