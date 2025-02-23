@@ -137,7 +137,7 @@ function mostrarReporte() {
             <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado de Pago:</strong> ${viaje.estadoPago}</p>
             <button onclick="editarViaje(${index})">Editar</button>
             <button onclick="eliminarViaje(${index})">Eliminar</button>
-            <button onclick="tomarCaptura(${index})">Tomar Captura</button>
+            <button onclick="tomarCaptura(${index})">Descargar Ficha</button>
             <hr>
         `;
         reporteDiv.appendChild(viajeReporte);
@@ -146,54 +146,44 @@ function mostrarReporte() {
 
 function tomarCaptura(index) {
     try {
-        if (!window.HTMLCanvasElement) {
-            throw new Error("Tu navegador no soporta la generación de imágenes.");
-        }
-
         const viaje = viajes[index];
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
 
-        canvas.width = 400;
-        canvas.height = 600;
+        // Crear el contenido del archivo de texto
+        const contenido = `
+            Ficha de Viaje #${index + 1}
+            --------------------------
+            Fecha: ${viaje.fecha}
+            Empresa: ${viaje.empresa}
+            Chofer: ${viaje.chofer}
+            Placa: ${viaje.placa}
+            Salida: ${viaje.salida}
+            Destino: ${viaje.destino}
+            Viáticos (USD): ${viaje.viaticos}
+            Gasoil (USD): ${viaje.gasoil}
+            Litros de Gasoil: ${viaje.litrosGasoil}
+            Gastos Adicionales (USD): ${viaje.gastos}
+            Pago al Chofer (USD): ${viaje.pago}
+            Entrada (USD): ${viaje.entrada}
+            Ganancias Netas (USD): ${viaje.gananciasNetas}
+            Estado de Pago: ${viaje.estadoPago}
+        `;
 
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Crear un Blob con el contenido
+        const blob = new Blob([contenido], { type: 'text/plain' });
 
-        ctx.fillStyle = '#000000';
-        ctx.font = '16px Arial';
-        let y = 30;
-
-        const agregarTexto = (texto, x = 20) => {
-            ctx.fillText(texto, x, y);
-            y += 20;
-        };
-
-        agregarTexto(`Fecha: ${viaje.fecha}`);
-        agregarTexto(`Empresa: ${viaje.empresa}`);
-        agregarTexto(`Chofer: ${viaje.chofer}`);
-        agregarTexto(`Placa: ${viaje.placa}`);
-        agregarTexto(`Salida: ${viaje.salida}`);
-        agregarTexto(`Destino: ${viaje.destino}`);
-        agregarTexto(`Viáticos (USD): ${viaje.viaticos}`);
-        agregarTexto(`Gasoil (USD): ${viaje.gasoil}`);
-        agregarTexto(`Litros de Gasoil: ${viaje.litrosGasoil}`);
-        agregarTexto(`Gastos Adicionales (USD): ${viaje.gastos}`);
-        agregarTexto(`Pago al Chofer (USD): ${viaje.pago}`);
-        agregarTexto(`Entrada (USD): ${viaje.entrada}`);
-        agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
-        agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
-
-        const imagen = canvas.toDataURL('image/png');
+        // Crear un enlace para descargar el archivo
         const enlace = document.createElement('a');
-        enlace.href = imagen;
-        enlace.download = `viaje_${index + 1}.png`;
+        enlace.href = URL.createObjectURL(blob);
+        enlace.download = `ficha_viaje_${index + 1}.txt`;
         enlace.click();
 
-        alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
+        // Liberar el objeto URL
+        URL.revokeObjectURL(enlace.href);
+
+        alert("La ficha se ha descargado como archivo de texto. Puedes compartirla.");
     } catch (error) {
-        console.error("Error al generar la imagen:", error);
-        alert("Hubo un error al generar la imagen. Intenta nuevamente.");
+        console.error("Error al generar el archivo de texto:", error);
+        alert("Hubo un error al generar la ficha. Intenta nuevamente.");
     }
 }
 
