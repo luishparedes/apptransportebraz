@@ -5,57 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRANSPORTE BRAZ</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Incluimos jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>TRANSPORTE BRAZ</h1>
-
     <div id="mensaje-edicion" style="display: none;">Estás editando un viaje</div>
 
     <form id="vehiculoForm">
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" name="fecha" required><br><br>
-
-        <label for="empresa">Nombre de la Empresa:</label>
-        <input type="text" id="empresa" name="empresa" required><br><br>
-
-        <label for="chofer">Nombre del Chofer:</label>
-        <input type="text" id="chofer" name="chofer" required><br><br>
-
-        <label for="placa">Placa del Vehículo:</label>
-        <input type="text" id="placa" name="placa" required><br><br>
-
-        <label for="salida">Lugar de Salida:</label>
-        <input type="text" id="salida" name="salida" required><br><br>
-
-        <label for="destino">Destino:</label>
-        <input type="text" id="destino" name="destino" required><br><br>
-
-        <label for="viaticos">Viáticos (USD):</label>
-        <input type="number" id="viaticos" name="viaticos" required><br><br>
-
-        <label for="gasoil">Gasoil (USD):</label>
-        <input type="number" id="gasoil" name="gasoil" required><br><br>
-
-        <label for="litrosGasoil">Litros Consumidos de Gasoil:</label>
-        <input type="number" id="litrosGasoil" name="litrosGasoil" required><br><br>
-
-        <label for="gastos">Gastos Adicionales (USD):</label>
-        <input type="number" id="gastos" name="gastos" required><br><br>
-
-        <label for="pago">Pago al Chofer (USD):</label>
-        <input type="number" id="pago" name="pago" required><br><br>
-
-        <label for="entrada">Entrada por Realizar el Servicio (USD):</label>
-        <input type="number" id="entrada" name="entrada" required><br><br>
-
-        <label for="estadoPago">Estado de Pago:</label>
-        <select id="estadoPago" name="estadoPago" required>
+        <label for="fecha">Fecha:</label><input type="date" id="fecha" required><br><br>
+        <label for="empresa">Empresa:</label><input type="text" id="empresa" required><br><br>
+        <label for="chofer">Chofer:</label><input type="text" id="chofer" required><br><br>
+        <label for="placa">Placa:</label><input type="text" id="placa" required><br><br>
+        <label for="salida">Salida:</label><input type="text" id="salida" required><br><br>
+        <label for="destino">Destino:</label><input type="text" id="destino" required><br><br>
+        <label for="viaticos">Viáticos (USD):</label><input type="number" id="viaticos" required><br><br>
+        <label for="gasoil">Gasoil (USD):</label><input type="number" id="gasoil" required><br><br>
+        <label for="litrosGasoil">Litros Gasoil:</label><input type="number" id="litrosGasoil" required><br><br>
+        <label for="gastos">Gastos (USD):</label><input type="number" id="gastos" required><br><br>
+        <label for="pago">Pago Chofer (USD):</label><input type="number" id="pago" required><br><br>
+        <label for="entrada">Entrada (USD):</label><input type="number" id="entrada" required><br><br>
+        <label for="estadoPago">Estado Pago:</label>
+        <select id="estadoPago" required>
             <option value="Pagado">Pagado</option>
             <option value="Falta por cobrar">Falta por cobrar</option>
         </select><br><br>
-
         <button type="submit">Agregar Viaje</button>
     </form>
 
@@ -64,55 +37,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', cargarDatos);
-
         let viajes = JSON.parse(localStorage.getItem('viajes')) || [];
         let editing = false;
         let viajeEditando = null;
 
         document.getElementById('vehiculoForm').addEventListener('submit', function(event) {
             event.preventDefault();
-
-            if (editing) {
-                guardarCambios();
-            } else {
-                agregarViaje();
-            }
+            if (editing) guardarCambios(); else agregarViaje();
         });
 
         function agregarViaje() {
-            const fecha = document.getElementById('fecha').value;
-            const empresa = document.getElementById('empresa').value;
-            const chofer = document.getElementById('chofer').value;
-            const placa = document.getElementById('placa').value;
-            const salida = document.getElementById('salida').value;
-            const destino = document.getElementById('destino').value;
-            const viaticos = parseFloat(document.getElementById('viaticos').value);
-            const gasoil = parseFloat(document.getElementById('gasoil').value);
-            const litrosGasoil = parseFloat(document.getElementById('litrosGasoil').value);
-            const gastos = parseFloat(document.getElementById('gastos').value);
-            const pago = parseFloat(document.getElementById('pago').value);
-            const entrada = parseFloat(document.getElementById('entrada').value);
-            const estadoPago = document.getElementById('estadoPago').value;
-
-            const gananciasNetas = entrada - viaticos - gasoil - gastos - pago;
-
             const nuevoViaje = {
-                fecha: fecha,
-                empresa: empresa,
-                chofer: chofer,
-                placa: placa,
-                salida: salida,
-                destino: destino,
-                viaticos: viaticos,
-                gasoil: gasoil,
-                litrosGasoil: litrosGasoil,
-                gastos: gastos,
-                pago: pago,
-                entrada: entrada,
-                gananciasNetas: gananciasNetas,
-                estadoPago: estadoPago
+                fecha: document.getElementById('fecha').value,
+                empresa: document.getElementById('empresa').value,
+                chofer: document.getElementById('chofer').value,
+                placa: document.getElementById('placa').value,
+                salida: document.getElementById('salida').value,
+                destino: document.getElementById('destino').value,
+                viaticos: parseFloat(document.getElementById('viaticos').value),
+                gasoil: parseFloat(document.getElementById('gasoil').value),
+                litrosGasoil: parseFloat(document.getElementById('litrosGasoil').value),
+                gastos: parseFloat(document.getElementById('gastos').value),
+                pago: parseFloat(document.getElementById('pago').value),
+                entrada: parseFloat(document.getElementById('entrada').value),
+                estadoPago: document.getElementById('estadoPago').value,
+                gananciasNetas: parseFloat(document.getElementById('entrada').value) -
+                    parseFloat(document.getElementById('viaticos').value) -
+                    parseFloat(document.getElementById('gasoil').value) -
+                    parseFloat(document.getElementById('gastos').value) -
+                    parseFloat(document.getElementById('pago').value)
             };
-
             viajes.push(nuevoViaje);
             guardarDatos();
             mostrarReporte();
@@ -122,7 +76,6 @@
         function editarViaje(index) {
             editing = true;
             viajeEditando = viajes[index];
-
             document.getElementById('fecha').value = viajeEditando.fecha;
             document.getElementById('empresa').value = viajeEditando.empresa;
             document.getElementById('chofer').value = viajeEditando.chofer;
@@ -136,11 +89,9 @@
             document.getElementById('pago').value = viajeEditando.pago;
             document.getElementById('entrada').value = viajeEditando.entrada;
             document.getElementById('estadoPago').value = viajeEditando.estadoPago;
-
             viajes.splice(index, 1);
             guardarDatos();
             mostrarReporte();
-
             document.getElementById('mensaje-edicion').style.display = 'block';
             document.querySelector('button[type="submit"]').textContent = 'Guardar Cambios';
         }
@@ -159,15 +110,12 @@
             viajeEditando.pago = parseFloat(document.getElementById('pago').value);
             viajeEditando.entrada = parseFloat(document.getElementById('entrada').value);
             viajeEditando.estadoPago = document.getElementById('estadoPago').value;
-
             viajes.push(viajeEditando);
             guardarDatos();
             mostrarReporte();
-
             document.getElementById('vehiculoForm').reset();
             editing = false;
             viajeEditando = null;
-
             document.getElementById('mensaje-edicion').style.display = 'none';
             document.querySelector('button[type="submit"]').textContent = 'Agregar Viaje';
         }
@@ -181,7 +129,6 @@
         function mostrarReporte() {
             const reporteDiv = document.getElementById('reporte');
             reporteDiv.innerHTML = '';
-
             viajes.forEach((viaje, index) => {
                 const viajeReporte = document.createElement('div');
                 viajeReporte.innerHTML = `
@@ -194,12 +141,12 @@
                     <p><strong>Destino:</strong> ${viaje.destino}</p>
                     <p><strong>Viáticos (USD):</strong> ${viaje.viaticos}</p>
                     <p><strong>Gasoil (USD):</strong> ${viaje.gasoil}</p>
-                    <p><strong>Litros Consumidos de Gasoil:</strong> ${viaje.litrosGasoil}</p>
-                    <p><strong>Gastos Adicionales (USD):</strong> ${viaje.gastos}</p>
-                    <p><strong>Pago al Chofer (USD):</strong> ${viaje.pago}</p>
-                    <p><strong>Entrada por Realizar el Servicio (USD):</strong> ${viaje.entrada}</p>
+                    <p><strong>Litros Gasoil:</strong> ${viaje.litrosGasoil}</p>
+                    <p><strong>Gastos (USD):</strong> ${viaje.gastos}</p>
+                    <p><strong>Pago Chofer (USD):</strong> ${viaje.pago}</p>
+                    <p><strong>Entrada (USD):</strong> ${viaje.entrada}</p>
                     <p><strong>Ganancias Netas (USD):</strong> ${viaje.gananciasNetas}</p>
-                    <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado de Pago:</strong> ${viaje.estadoPago}</p>
+                    <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado Pago:</strong> ${viaje.estadoPago}</p>
                     <button onclick="editarViaje(${index})">Editar</button>
                     <button onclick="eliminarViaje(${index})">Eliminar</button>
                     <button onclick="generarPDF(${index})">Generar PDF</button>
@@ -211,20 +158,12 @@
 
         function generarPDF(index) {
             const viaje = viajes[index];
-
-            // Crear un nuevo documento PDF
             const doc = new jspdf.jsPDF();
-
-            // Agregar contenido al PDF
             doc.setFontSize(18);
             doc.text("Ficha de Viaje", 10, 10);
             doc.setFontSize(12);
             let y = 20;
-            const agregarTexto = (texto) => {
-                doc.text(texto, 10, y);
-                y += 10;
-            };
-
+            const agregarTexto = (texto) => { doc.text(texto, 10, y); y += 10; };
             agregarTexto(`Fecha: ${viaje.fecha}`);
             agregarTexto(`Empresa: ${viaje.empresa}`);
             agregarTexto(`Chofer: ${viaje.chofer}`);
@@ -233,14 +172,12 @@
             agregarTexto(`Destino: ${viaje.destino}`);
             agregarTexto(`Viáticos (USD): ${viaje.viaticos}`);
             agregarTexto(`Gasoil (USD): ${viaje.gasoil}`);
-            agregarTexto(`Litros de Gasoil: ${viaje.litrosGasoil}`);
-            agregarTexto(`Gastos Adicionales (USD): ${viaje.gastos}`);
-            agregarTexto(`Pago al Chofer (USD): ${viaje.pago}`);
+            agregarTexto(`Litros Gasoil: ${viaje.litrosGasoil}`);
+            agregarTexto(`Gastos (USD): ${viaje.gastos}`);
+            agregarTexto(`Pago Chofer (USD): ${viaje.pago}`);
             agregarTexto(`Entrada (USD): ${viaje.entrada}`);
             agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
-            agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
-
-            // Guardar el PDF
+            agregarTexto(`Estado Pago: ${viaje.estadoPago}`);
             doc.save(`viaje_${index + 1}.pdf`);
         }
 
