@@ -146,7 +146,23 @@ function mostrarReporte() {
 
 function tomarCaptura(index) {
     const viaje = document.querySelectorAll('#reporte div')[index];
-    alert("Por favor, toma una captura de pantalla de esta ficha desde tu dispositivo móvil.");
+
+    // Usar html2canvas para convertir la ficha en una imagen
+    html2canvas(viaje).then(canvas => {
+        // Convertir el canvas a una imagen
+        const imagen = canvas.toDataURL('image/png');
+
+        // Crear un enlace para descargar la imagen
+        const enlace = document.createElement('a');
+        enlace.href = imagen;
+        enlace.download = `viaje_${index + 1}.png`; // Nombre del archivo
+        enlace.click(); // Simular clic para descargar
+
+        alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
+    }).catch(error => {
+        console.error("Error al generar la imagen:", error);
+        alert("Hubo un error al generar la imagen. Intenta nuevamente.");
+    });
 }
 
 function guardarDatos() {
