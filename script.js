@@ -138,6 +138,7 @@ function mostrarReporte() {
             <button onclick="editarViaje(${index})">Editar</button>
             <button onclick="eliminarViaje(${index})">Eliminar</button>
             <button onclick="tomarCaptura(${index})">Descargar Ficha</button>
+            <button onclick="copiarAlPortapapeles(${index})">Copiar Ficha</button>
             <hr>
         `;
         reporteDiv.appendChild(viajeReporte);
@@ -175,16 +176,53 @@ function tomarCaptura(index) {
         const enlace = document.createElement('a');
         enlace.href = URL.createObjectURL(blob);
         enlace.download = `ficha_viaje_${index + 1}.txt`;
+
+        // Simular un clic en el enlace para forzar la descarga
+        document.body.appendChild(enlace);
         enlace.click();
+        document.body.removeChild(enlace);
 
         // Liberar el objeto URL
         URL.revokeObjectURL(enlace.href);
 
-        alert("La ficha se ha descargado como archivo de texto. Puedes compartirla.");
+        alert("Se ha generado la ficha. Revisa tu carpeta de descargas.");
     } catch (error) {
         console.error("Error al generar el archivo de texto:", error);
         alert("Hubo un error al generar la ficha. Intenta nuevamente.");
     }
+}
+
+function copiarAlPortapapeles(index) {
+    const viaje = viajes[index];
+
+    const contenido = `
+        Ficha de Viaje #${index + 1}
+        --------------------------
+        Fecha: ${viaje.fecha}
+        Empresa: ${viaje.empresa}
+        Chofer: ${viaje.chofer}
+        Placa: ${viaje.placa}
+        Salida: ${viaje.salida}
+        Destino: ${viaje.destino}
+        Viáticos (USD): ${viaje.viaticos}
+        Gasoil (USD): ${viaje.gasoil}
+        Litros de Gasoil: ${viaje.litrosGasoil}
+        Gastos Adicionales (USD): ${viaje.gastos}
+        Pago al Chofer (USD): ${viaje.pago}
+        Entrada (USD): ${viaje.entrada}
+        Ganancias Netas (USD): ${viaje.gananciasNetas}
+        Estado de Pago: ${viaje.estadoPago}
+    `;
+
+    // Copiar al portapapeles
+    navigator.clipboard.writeText(contenido)
+        .then(() => {
+            alert("La ficha se ha copiado al portapapeles. Puedes pegarla donde necesites.");
+        })
+        .catch((error) => {
+            console.error("Error al copiar al portapapeles:", error);
+            alert("Hubo un error al copiar la ficha. Intenta nuevamente.");
+        });
 }
 
 function guardarDatos() {
