@@ -2,100 +2,61 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    padding: 20px;
-    background: linear-gradient(to bottom, #ffffff, #d3d3d3);
-    color: #000;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
-h1,
-h2 {
-    color: #000;
+h1, h2 {
+    color: #333;
 }
 
 form {
-    background: rgba(255, 255, 255, 0.8);
+    background-color: #fff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    color: #000;
 }
 
 label {
     display: block;
-    margin-top: 10px;
+    margin-bottom: 8px;
     font-weight: bold;
-    color: #000;
 }
 
-input,
-select,
-button {
-    display: block;
-    margin-top: 5px;
+input, select {
     width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #f5f5f5;
-    color: #000;
-}
-
-input:focus,
-select:focus {
-    background-color: #e0e0e0;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 button {
-    background: #4CAF50;
+    background-color: #28a745;
     color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    margin: 5px 0;
 }
 
 button:hover {
-    background: #45a049;
+    background-color: #218838;
 }
 
-#reporte {
+#reporte div {
     background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    color: #000;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .falta-cobrar {
     color: red;
-    font-weight: bold;
 }
 
 .pagado {
     color: green;
-    font-weight: bold;
-}
-
-#mensaje-edicion {
-    background-color: #ffffcc;
-    border: 1px solid #ffcc00;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-/* Estilos para impresión */
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    #reporte div, #reporte div * {
-        visibility: visible;
-    }
-    #reporte div {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
-    button {
-        display: none;
-    }
 }
