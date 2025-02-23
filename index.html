@@ -9,8 +9,10 @@
 <body>
     <h1>TRANSPORTE BRAZ</h1>
 
+    <!-- Mensaje de edición (oculto por defecto) -->
     <div id="mensaje-edicion" style="display: none;">Estás editando un viaje</div>
 
+    <!-- Formulario para agregar/editar viajes -->
     <form id="vehiculoForm">
         <label for="fecha">Fecha:</label>
         <input type="date" id="fecha" name="fecha" required><br><br>
@@ -57,9 +59,13 @@
         <button type="submit">Agregar Viaje</button>
     </form>
 
+    <!-- Título del reporte -->
     <h2>Reporte de Viajes</h2>
+
+    <!-- Contenedor para mostrar el reporte de viajes -->
     <div id="reporte"></div>
 
+    <!-- Enlace al archivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
