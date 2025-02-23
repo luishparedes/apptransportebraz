@@ -145,24 +145,56 @@ function mostrarReporte() {
 }
 
 function tomarCaptura(index) {
-    const viaje = document.querySelectorAll('#reporte div')[index];
+    const viaje = viajes[index];
 
-    // Usar html2canvas para convertir la ficha en una imagen
-    html2canvas(viaje).then(canvas => {
-        // Convertir el canvas a una imagen
-        const imagen = canvas.toDataURL('image/png');
+    // Crear un canvas temporal para dibujar la imagen
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-        // Crear un enlace para descargar la imagen
-        const enlace = document.createElement('a');
-        enlace.href = imagen;
-        enlace.download = `viaje_${index + 1}.png`; // Nombre del archivo
-        enlace.click(); // Simular clic para descargar
+    // Definir el tamaño del canvas
+    canvas.width = 400; // Ancho de la imagen
+    canvas.height = 600; // Alto de la imagen
 
-        alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
-    }).catch(error => {
-        console.error("Error al generar la imagen:", error);
-        alert("Hubo un error al generar la imagen. Intenta nuevamente.");
-    });
+    // Dibujar el fondo (opcional)
+    ctx.fillStyle = '#ffffff'; // Fondo blanco
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar los datos del viaje
+    ctx.fillStyle = '#000000'; // Color del texto
+    ctx.font = '16px Arial';
+    let y = 30; // Posición vertical inicial
+
+    // Función para agregar texto
+    const agregarTexto = (texto, x = 20) => {
+        ctx.fillText(texto, x, y);
+        y += 20; // Aumentar la posición vertical
+    };
+
+    agregarTexto(`Fecha: ${viaje.fecha}`);
+    agregarTexto(`Empresa: ${viaje.empresa}`);
+    agregarTexto(`Chofer: ${viaje.chofer}`);
+    agregarTexto(`Placa: ${viaje.placa}`);
+    agregarTexto(`Salida: ${viaje.salida}`);
+    agregarTexto(`Destino: ${viaje.destino}`);
+    agregarTexto(`Viáticos (USD): ${viaje.viaticos}`);
+    agregarTexto(`Gasoil (USD): ${viaje.gasoil}`);
+    agregarTexto(`Litros de Gasoil: ${viaje.litrosGasoil}`);
+    agregarTexto(`Gastos Adicionales (USD): ${viaje.gastos}`);
+    agregarTexto(`Pago al Chofer (USD): ${viaje.pago}`);
+    agregarTexto(`Entrada (USD): ${viaje.entrada}`);
+    agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
+    agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
+
+    // Convertir el canvas a una imagen en base64
+    const imagen = canvas.toDataURL('image/png');
+
+    // Crear un enlace para descargar la imagen
+    const enlace = document.createElement('a');
+    enlace.href = imagen;
+    enlace.download = `viaje_${index + 1}.png`;
+    enlace.click();
+
+    alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
 }
 
 function guardarDatos() {
