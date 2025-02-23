@@ -137,59 +137,11 @@ function mostrarReporte() {
             <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado de Pago:</strong> ${viaje.estadoPago}</p>
             <button onclick="editarViaje(${index})">Editar</button>
             <button onclick="eliminarViaje(${index})">Eliminar</button>
-            <button onclick="tomarCaptura(${index})">Descargar Ficha</button>
             <button onclick="copiarAlPortapapeles(${index})">Copiar Ficha</button>
             <hr>
         `;
         reporteDiv.appendChild(viajeReporte);
     });
-}
-
-function tomarCaptura(index) {
-    try {
-        const viaje = viajes[index];
-
-        // Crear el contenido del archivo de texto
-        const contenido = `
-            Ficha de Viaje #${index + 1}
-            --------------------------
-            Fecha: ${viaje.fecha}
-            Empresa: ${viaje.empresa}
-            Chofer: ${viaje.chofer}
-            Placa: ${viaje.placa}
-            Salida: ${viaje.salida}
-            Destino: ${viaje.destino}
-            Viáticos (USD): ${viaje.viaticos}
-            Gasoil (USD): ${viaje.gasoil}
-            Litros de Gasoil: ${viaje.litrosGasoil}
-            Gastos Adicionales (USD): ${viaje.gastos}
-            Pago al Chofer (USD): ${viaje.pago}
-            Entrada (USD): ${viaje.entrada}
-            Ganancias Netas (USD): ${viaje.gananciasNetas}
-            Estado de Pago: ${viaje.estadoPago}
-        `;
-
-        // Crear un Blob con el contenido
-        const blob = new Blob([contenido], { type: 'text/plain' });
-
-        // Crear un enlace para descargar el archivo
-        const enlace = document.createElement('a');
-        enlace.href = URL.createObjectURL(blob);
-        enlace.download = `ficha_viaje_${index + 1}.txt`;
-
-        // Simular un clic en el enlace para forzar la descarga
-        document.body.appendChild(enlace);
-        enlace.click();
-        document.body.removeChild(enlace);
-
-        // Liberar el objeto URL
-        URL.revokeObjectURL(enlace.href);
-
-        alert("Se ha generado la ficha. Revisa tu carpeta de descargas.");
-    } catch (error) {
-        console.error("Error al generar el archivo de texto:", error);
-        alert("Hubo un error al generar la ficha. Intenta nuevamente.");
-    }
 }
 
 function copiarAlPortapapeles(index) {
