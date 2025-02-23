@@ -137,46 +137,64 @@ function mostrarReporte() {
             <p class="${viaje.estadoPago === 'Falta por cobrar' ? 'falta-cobrar' : 'pagado'}"><strong>Estado de Pago:</strong> ${viaje.estadoPago}</p>
             <button onclick="editarViaje(${index})">Editar</button>
             <button onclick="eliminarViaje(${index})">Eliminar</button>
-            <button onclick="generarPDF(${index})">Generar PDF</button>
+            <button onclick="tomarCaptura(${index})">Tomar Captura</button>
             <hr>
         `;
         reporteDiv.appendChild(viajeReporte);
     });
 }
 
-function generarPDF(index) {
-    const viaje = viajes[index];
+function tomarCaptura(index) {
+    try {
+        if (!window.HTMLCanvasElement) {
+            throw new Error("Tu navegador no soporta la generación de imágenes.");
+        }
 
-    // Crear un nuevo documento PDF
-    const doc = new jspdf.jsPDF();
+        const viaje = viajes[index];
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-    // Agregar contenido al PDF
-    doc.setFontSize(18);
-    doc.text("Ficha de Viaje", 10, 10);
-    doc.setFontSize(12);
-    let y = 20;
-    const agregarTexto = (texto) => {
-        doc.text(texto, 10, y);
-        y += 10;
-    };
+        canvas.width = 400;
+        canvas.height = 600;
 
-    agregarTexto(`Fecha: ${viaje.fecha}`);
-    agregarTexto(`Empresa: ${viaje.empresa}`);
-    agregarTexto(`Chofer: ${viaje.chofer}`);
-    agregarTexto(`Placa: ${viaje.placa}`);
-    agregarTexto(`Salida: ${viaje.salida}`);
-    agregarTexto(`Destino: ${viaje.destino}`);
-    agregarTexto(`Viáticos (USD): ${viaje.viaticos}`);
-    agregarTexto(`Gasoil (USD): ${viaje.gasoil}`);
-    agregarTexto(`Litros de Gasoil: ${viaje.litrosGasoil}`);
-    agregarTexto(`Gastos Adicionales (USD): ${viaje.gastos}`);
-    agregarTexto(`Pago al Chofer (USD): ${viaje.pago}`);
-    agregarTexto(`Entrada (USD): ${viaje.entrada}`);
-    agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
-    agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Guardar el PDF
-    doc.save(`viaje_${index + 1}.pdf`);
+        ctx.fillStyle = '#000000';
+        ctx.font = '16px Arial';
+        let y = 30;
+
+        const agregarTexto = (texto, x = 20) => {
+            ctx.fillText(texto, x, y);
+            y += 20;
+        };
+
+        agregarTexto(`Fecha: ${viaje.fecha}`);
+        agregarTexto(`Empresa: ${viaje.empresa}`);
+        agregarTexto(`Chofer: ${viaje.chofer}`);
+        agregarTexto(`Placa: ${viaje.placa}`);
+        agregarTexto(`Salida: ${viaje.salida}`);
+        agregarTexto(`Destino: ${viaje.destino}`);
+        agregarTexto(`Viáticos (USD): ${viaje.viaticos}`);
+        agregarTexto(`Gasoil (USD): ${viaje.gasoil}`);
+        agregarTexto(`Litros de Gasoil: ${viaje.litrosGasoil}`);
+        agregarTexto(`Gastos Adicionales (USD): ${viaje.gastos}`);
+        agregarTexto(`Pago al Chofer (USD): ${viaje.pago}`);
+        agregarTexto(`Entrada (USD): ${viaje.entrada}`);
+        agregarTexto(`Ganancias Netas (USD): ${viaje.gananciasNetas}`);
+        agregarTexto(`Estado de Pago: ${viaje.estadoPago}`);
+
+        const imagen = canvas.toDataURL('image/png');
+        const enlace = document.createElement('a');
+        enlace.href = imagen;
+        enlace.download = `viaje_${index + 1}.png`;
+        enlace.click();
+
+        alert("La imagen de la ficha se ha descargado. Puedes guardarla en tu galería.");
+    } catch (error) {
+        console.error("Error al generar la imagen:", error);
+        alert("Hubo un error al generar la imagen. Intenta nuevamente.");
+    }
 }
 
 function guardarDatos() {
