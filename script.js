@@ -15,6 +15,7 @@ document.getElementById('vehiculoForm').addEventListener('submit', function(even
 });
 
 function agregarViaje() {
+    const numeroViaje = document.getElementById('numeroViaje').value;
     const moneda = document.getElementById('moneda').value;
     const fecha = document.getElementById('fecha').value;
     const empresa = document.getElementById('empresa').value;
@@ -27,14 +28,14 @@ function agregarViaje() {
     const litrosGasoil = parseFloat(document.getElementById('litrosGasoil').value);
     const peaje = parseFloat(document.getElementById('peaje').value);
     const gastos = parseFloat(document.getElementById('gastos').value);
-    const gastoExtra = parseFloat(document.getElementById('gastoExtra').value);
     const pago = parseFloat(document.getElementById('pago').value);
     const entrada = parseFloat(document.getElementById('entrada').value);
     const estadoPago = document.getElementById('estadoPago').value;
 
-    const gananciasNetas = entrada - viaticos - gasoil - peaje - gastos - gastoExtra - pago;
+    const gananciasNetas = entrada - viaticos - gasoil - peaje - gastos - pago;
 
     const nuevoViaje = {
+        numeroViaje: numeroViaje,
         moneda: moneda,
         fecha: fecha,
         empresa: empresa,
@@ -47,7 +48,6 @@ function agregarViaje() {
         litrosGasoil: litrosGasoil,
         peaje: peaje,
         gastos: gastos,
-        gastoExtra: gastoExtra,
         pago: pago,
         entrada: entrada,
         gananciasNetas: gananciasNetas,
@@ -64,6 +64,8 @@ function editarViaje(index) {
     editing = true;
     viajeEditando = viajes[index];
 
+    // Cargar datos en el formulario
+    document.getElementById('numeroViaje').value = viajeEditando.numeroViaje;
     document.getElementById('moneda').value = viajeEditando.moneda;
     document.getElementById('fecha').value = viajeEditando.fecha;
     document.getElementById('empresa').value = viajeEditando.empresa;
@@ -76,20 +78,19 @@ function editarViaje(index) {
     document.getElementById('litrosGasoil').value = viajeEditando.litrosGasoil;
     document.getElementById('peaje').value = viajeEditando.peaje;
     document.getElementById('gastos').value = viajeEditando.gastos;
-    document.getElementById('gastoExtra').value = viajeEditando.gastoExtra;
     document.getElementById('pago').value = viajeEditando.pago;
     document.getElementById('entrada').value = viajeEditando.entrada;
     document.getElementById('estadoPago').value = viajeEditando.estadoPago;
 
-    viajes.splice(index, 1);
-    guardarDatos();
-    mostrarReporte();
+    // Mostrar mensaje flotante
+    mostrarToast("Estás editando un viaje. Modifica los campos necesarios.");
 
-    document.getElementById('mensaje-edicion').style.display = 'block';
+    // Cambiar el texto del botón
     document.querySelector('button[type="submit"]').textContent = 'Guardar Cambios';
 }
 
 function guardarCambios() {
+    viajeEditando.numeroViaje = document.getElementById('numeroViaje').value;
     viajeEditando.moneda = document.getElementById('moneda').value;
     viajeEditando.fecha = document.getElementById('fecha').value;
     viajeEditando.empresa = document.getElementById('empresa').value;
@@ -102,7 +103,6 @@ function guardarCambios() {
     viajeEditando.litrosGasoil = parseFloat(document.getElementById('litrosGasoil').value);
     viajeEditando.peaje = parseFloat(document.getElementById('peaje').value);
     viajeEditando.gastos = parseFloat(document.getElementById('gastos').value);
-    viajeEditando.gastoExtra = parseFloat(document.getElementById('gastoExtra').value);
     viajeEditando.pago = parseFloat(document.getElementById('pago').value);
     viajeEditando.entrada = parseFloat(document.getElementById('entrada').value);
     viajeEditando.estadoPago = document.getElementById('estadoPago').value;
@@ -115,8 +115,11 @@ function guardarCambios() {
     editing = false;
     viajeEditando = null;
 
-    document.getElementById('mensaje-edicion').style.display = 'none';
+    // Cambiar el texto del botón
     document.querySelector('button[type="submit"]').textContent = 'Agregar Viaje';
+
+    // Mostrar mensaje flotante
+    mostrarToast("Cambios guardados correctamente.");
 }
 
 function eliminarViaje(index) {
@@ -132,7 +135,7 @@ function mostrarReporte() {
     viajes.forEach((viaje, index) => {
         const viajeReporte = document.createElement('div');
         viajeReporte.innerHTML = `
-            <h3>Viaje #${index + 1}</h3>
+            <h3>Viaje #${viaje.numeroViaje}</h3>
             <p><strong>Moneda:</strong> ${viaje.moneda}</p>
             <p><strong>Fecha:</strong> ${viaje.fecha}</p>
             <p><strong>Empresa:</strong> ${viaje.empresa}</p>
@@ -145,7 +148,6 @@ function mostrarReporte() {
             <p><strong>Litros Consumidos de Gasoil:</strong> ${viaje.litrosGasoil}</p>
             <p><strong>Peaje:</strong> ${viaje.peaje} ${viaje.moneda}</p>
             <p><strong>Gastos Adicionales:</strong> ${viaje.gastos} ${viaje.moneda}</p>
-            <p><strong>Gasto Extra:</strong> ${viaje.gastoExtra} ${viaje.moneda}</p>
             <p><strong>Pago al Chofer:</strong> ${viaje.pago} ${viaje.moneda}</p>
             <p><strong>Entrada por Realizar el Servicio:</strong> ${viaje.entrada} ${viaje.moneda}</p>
             <p><strong>Ganancias Netas:</strong> ${viaje.gananciasNetas} ${viaje.moneda}</p>
@@ -163,7 +165,7 @@ function copiarAlPortapapeles(index) {
     const viaje = viajes[index];
 
     const contenido = `
-        Ficha de Viaje #${index + 1}
+        Ficha de Viaje #${viaje.numeroViaje}
         --------------------------
         Moneda: ${viaje.moneda}
         Fecha: ${viaje.fecha}
@@ -177,7 +179,6 @@ function copiarAlPortapapeles(index) {
         Litros de Gasoil: ${viaje.litrosGasoil}
         Peaje: ${viaje.peaje} ${viaje.moneda}
         Gastos Adicionales: ${viaje.gastos} ${viaje.moneda}
-        Gasto Extra: ${viaje.gastoExtra} ${viaje.moneda}
         Pago al Chofer: ${viaje.pago} ${viaje.moneda}
         Entrada: ${viaje.entrada} ${viaje.moneda}
         Ganancias Netas: ${viaje.gananciasNetas} ${viaje.moneda}
@@ -187,12 +188,23 @@ function copiarAlPortapapeles(index) {
     // Copiar al portapapeles
     navigator.clipboard.writeText(contenido)
         .then(() => {
-            alert("La ficha se ha copiado al portapapeles. Puedes pegarla donde necesites.");
+            mostrarToast("La ficha se ha copiado al portapapeles. Puedes pegarla donde necesites.");
         })
         .catch((error) => {
             console.error("Error al copiar al portapapeles:", error);
-            alert("Hubo un error al copiar la ficha. Intenta nuevamente.");
+            mostrarToast("Hubo un error al copiar la ficha. Intenta nuevamente.");
         });
+}
+
+function mostrarToast(mensaje) {
+    const toast = document.getElementById('toast');
+    toast.textContent = mensaje;
+    toast.classList.add('show');
+
+    // Ocultar el toast después de 3 segundos
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
 }
 
 function guardarDatos() {
