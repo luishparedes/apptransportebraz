@@ -5,81 +5,258 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRANSPORTE BRAZ</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>TRANSPORTE BRAZ</h1>
+    <!-- Navegación móvil -->
+    <nav class="mobile-nav">
+        <div class="nav-logo">
+            <h1>TRANSPORTE BRAZ</h1>
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
 
-    <!-- Mensaje flotante (toast) -->
-    <div id="toast" class="toast"></div>
+    <!-- Menú lateral para móviles -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2>Menú</h2>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="menu-items">
+            <li><a href="#" class="menu-item active" data-section="reporte"><i class="fas fa-list"></i> Viajes Activos</a></li>
+            <li><a href="#" class="menu-item" data-section="formulario"><i class="fas fa-plus-circle"></i> Agregar Viaje</a></li>
+            <li><a href="#" class="menu-item" data-section="graficos"><i class="fas fa-chart-bar"></i> Gráficos</a></li>
+            <li><a href="#" class="menu-item" data-section="resumen"><i class="fas fa-calculator"></i> Resumen Financiero</a></li>
+        </ul>
+    </div>
 
-    <!-- Formulario para agregar/editar viajes -->
-    <form id="vehiculoForm">
-        <!-- Campo para el número de viaje -->
-        <label for="numeroViaje">Número de Viaje:</label>
-        <input type="number" id="numeroViaje" name="numeroViaje" required><br><br>
+    <!-- Overlay para cerrar menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
 
-        <!-- Selector de moneda -->
-        <label for="moneda">Moneda:</label>
-        <select id="moneda" name="moneda" required>
-            <option value="USD">Dólares (USD)</option>
-            <option value="BS">Bolívares (BS)</option>
-        </select><br><br>
+    <!-- Contenido principal -->
+    <main class="container">
+        <!-- Mensaje flotante (toast) -->
+        <div id="toast" class="toast"></div>
 
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" name="fecha" required><br><br>
+        <!-- Sección de formulario (oculta por defecto) -->
+        <section id="formulario" class="content-section hidden">
+            <h2><i class="fas fa-plus-circle"></i> Agregar Nuevo Viaje</h2>
+            
+            <form id="vehiculoForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="numeroViaje"><i class="fas fa-hashtag"></i> Número de Viaje:</label>
+                        <input type="number" id="numeroViaje" name="numeroViaje" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="moneda"><i class="fas fa-money-bill-wave"></i> Moneda:</label>
+                        <select id="moneda" name="moneda" required>
+                            <option value="USD">Dólares (USD)</option>
+                            <option value="BS">Bolívares (BS)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha:</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="empresa"><i class="fas fa-building"></i> Empresa:</label>
+                        <input type="text" id="empresa" name="empresa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="chofer"><i class="fas fa-user"></i> Chofer:</label>
+                        <input type="text" id="chofer" name="chofer" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="placa"><i class="fas fa-car"></i> Placa:</label>
+                        <input type="text" id="placa" name="placa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="salida"><i class="fas fa-map-marker-alt"></i> Lugar de Salida:</label>
+                        <input type="text" id="salida" name="salida" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="destino"><i class="fas fa-flag-checkered"></i> Destino:</label>
+                        <input type="text" id="destino" name="destino" required>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Gastos del Viaje</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="viaticos"><i class="fas fa-utensils"></i> Viáticos:</label>
+                        <input type="number" id="viaticos" name="viaticos" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gasoil"><i class="fas fa-gas-pump"></i> Gastos de Gasoil:</label>
+                        <input type="number" id="gasoil" name="gasoil" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="litrosGasoil"><i class="fas fa-oil-can"></i> Litros de Gasoil:</label>
+                        <input type="number" id="litrosGasoil" name="litrosGasoil" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peaje"><i class="fas fa-road"></i> Peaje:</label>
+                        <input type="number" id="peaje" name="peaje" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gastos"><i class="fas fa-receipt"></i> Gastos Adicionales:</label>
+                        <input type="number" id="gastos" name="gastos" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pago"><i class="fas fa-money-check-alt"></i> Pago al Chofer:</label>
+                        <input type="number" id="pago" name="pago" step="0.01" required>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Ingresos y Estado</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="entrada"><i class="fas fa-cash-register"></i> Entrada por Servicio:</label>
+                        <input type="number" id="entrada" name="entrada" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estadoPago"><i class="fas fa-clipboard-check"></i> Estado de Pago:</label>
+                        <select id="estadoPago" name="estadoPago" required>
+                            <option value="Pagado">Pagado</option>
+                            <option value="Falta por cobrar">Falta por cobrar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> <span id="btnSubmitText">Agregar Viaje</span>
+                    </button>
+                    <button type="button" class="btn-cancel" id="cancelEdit" style="display: none;">
+                        <i class="fas fa-times"></i> Cancelar Edición
+                    </button>
+                </div>
+            </form>
+        </section>
 
-        <label for="empresa">Nombre de la Empresa:</label>
-        <input type="text" id="empresa" name="empresa" required><br><br>
+        <!-- Sección de reporte (visible por defecto) -->
+        <section id="reporte" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Viajes Activos</h2>
+                <div class="filters">
+                    <select id="filterMoneda">
+                        <option value="todas">Todas las monedas</option>
+                        <option value="USD">USD</option>
+                        <option value="BS">BS</option>
+                    </select>
+                    <select id="filterEstado">
+                        <option value="todos">Todos los estados</option>
+                        <option value="Pagado">Pagado</option>
+                        <option value="Falta por cobrar">Falta por cobrar</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="reporteContainer"></div>
+        </section>
 
-        <label for="chofer">Nombre del Chofer:</label>
-        <input type="text" id="chofer" name="chofer" required><br><br>
+        <!-- Sección de gráficos -->
+        <section id="graficos" class="content-section hidden">
+            <h2><i class="fas fa-chart-bar"></i> Gráficos de Viajes</h2>
+            
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Ganancias por Viaje</h3>
+                    <canvas id="gananciasChart"></canvas>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Distribución de Gastos</h3>
+                    <canvas id="gastosChart"></canvas>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Viajes por Mes</h3>
+                    <canvas id="viajesChart"></canvas>
+                </div>
+            </div>
+        </section>
 
-        <label for="placa">Placa del Vehículo:</label>
-        <input type="text" id="placa" name="placa" required><br><br>
+        <!-- Sección de resumen financiero -->
+        <section id="resumen" class="content-section hidden">
+            <h2><i class="fas fa-calculator"></i> Resumen Financiero</h2>
+            
+            <div class="resumen-cards">
+                <div class="resumen-card">
+                    <h3><i class="fas fa-dollar-sign"></i> Resumen en USD</h3>
+                    <div class="resumen-item">
+                        <span>Total Ingresos:</span>
+                        <span id="totalIngresosUSD">$0.00</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span>Total Gastos:</span>
+                        <span id="totalGastosUSD">$0.00</span>
+                    </div>
+                    <div class="resumen-item total">
+                        <span>Ganancia Neta:</span>
+                        <span id="gananciaNetaUSD">$0.00</span>
+                    </div>
+                </div>
+                
+                <div class="resumen-card">
+                    <h3><i class="fas fa-bolivar-sign"></i> Resumen en BS</h3>
+                    <div class="resumen-item">
+                        <span>Total Ingresos:</span>
+                        <span id="totalIngresosBS">Bs 0.00</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span>Total Gastos:</span>
+                        <span id="totalGastosBS">Bs 0.00</span>
+                    </div>
+                    <div class="resumen-item total">
+                        <span>Ganancia Neta:</span>
+                        <span id="gananciaNetaBS">Bs 0.00</span>
+                    </div>
+                </div>
+                
+                <div class="resumen-card">
+                    <h3><i class="fas fa-chart-line"></i> Estadísticas</h3>
+                    <div class="resumen-item">
+                        <span>Total Viajes:</span>
+                        <span id="totalViajes">0</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span>Viajes Activos:</span>
+                        <span id="viajesActivos">0</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span>Ganancia Promedio:</span>
+                        <span id="gananciaPromedio">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <label for="salida">Lugar de Salida:</label>
-        <input type="text" id="salida" name="salida" required><br><br>
+    <!-- Botón flotante para agregar viaje -->
+    <button class="fab" id="fabAdd">
+        <i class="fas fa-plus"></i>
+    </button>
 
-        <label for="destino">Destino:</label>
-        <input type="text" id="destino" name="destino" required><br><br>
-
-        <label for="viaticos">Viáticos:</label>
-        <input type="number" id="viaticos" name="viaticos" required><br><br>
-
-        <label for="gasoil">Gasoil:</label>
-        <input type="number" id="gasoil" name="gasoil" required><br><br>
-
-        <label for="litrosGasoil">Litros Consumidos de Gasoil:</label>
-        <input type="number" id="litrosGasoil" name="litrosGasoil" required><br><br>
-
-        <label for="peaje">Peaje:</label>
-        <input type="number" id="peaje" name="peaje" required><br><br>
-
-        <label for="gastos">Gastos Adicionales:</label>
-        <input type="number" id="gastos" name="gastos" required><br><br>
-
-        <label for="pago">Pago al Chofer:</label>
-        <input type="number" id="pago" name="pago" required><br><br>
-
-        <label for="entrada">Entrada por Realizar el Servicio:</label>
-        <input type="number" id="entrada" name="entrada" required><br><br>
-
-        <label for="estadoPago">Estado de Pago:</label>
-        <select id="estadoPago" name="estadoPago" required>
-            <option value="Pagado">Pagado</option>
-            <option value="Falta por cobrar">Falta por cobrar</option>
-        </select><br><br>
-
-        <button type="submit">Agregar Viaje</button>
-    </form>
-
-    <!-- Título del reporte -->
-    <h2>Reporte de Viajes</h2>
-
-    <!-- Contenedor para mostrar el reporte de viajes -->
-    <div id="reporte"></div>
-
-    <!-- Enlace al archivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
